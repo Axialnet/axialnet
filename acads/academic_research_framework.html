@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academic Research Framework</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --font-sans: 'Helvetica Neue', Arial, sans-serif;
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f5f4f0;
+    --color-background-info: #e6f1fb;
+    --color-text-primary: #1a1a18;
+    --color-text-secondary: #6b6a64;
+    --color-text-info: #185fa5;
+    --color-border-tertiary: rgba(0,0,0,0.12);
+    --color-border-secondary: rgba(0,0,0,0.2);
+    --color-border-info: #378add;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-background-primary: #1e1e1c;
+      --color-background-secondary: #2a2a27;
+      --color-background-info: #0c2f50;
+      --color-text-primary: #e8e6dc;
+      --color-text-secondary: #9c9a92;
+      --color-text-info: #85b7eb;
+      --color-border-tertiary: rgba(255,255,255,0.1);
+      --color-border-secondary: rgba(255,255,255,0.2);
+      --color-border-info: #378add;
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .container { max-width: 740px; margin: 0 auto; }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: var(--color-text-primary);
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .overall-progress { margin-bottom: 1.5rem; }
+  .op-label { font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--color-text-primary); }
+  .progress-bar-wrap { background: var(--color-border-tertiary); border-radius: 6px; height: 6px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 6px; transition: width .4s; background: var(--color-text-info); }
+  .progress-label { font-size: 12px; color: var(--color-text-secondary); display: flex; justify-content: space-between; margin-top: 4px; }
+
+  .phase-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .ph-pill {
+    padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
+    border: 0.5px solid var(--color-border-secondary); background: transparent;
+    color: var(--color-text-secondary); cursor: pointer; transition: all .2s;
+    font-family: var(--font-sans);
+  }
+  .ph-pill:hover { background: var(--color-background-primary); color: var(--color-text-primary); }
+  .ph-pill.active { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+
+  .phase-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem 1.5rem;
+  }
+
+  .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .phase-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; flex-shrink: 0;
+  }
+  .phase-title { font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
+  .phase-desc { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+
+  .steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .step-item { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+  .step-label { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+  .step-sub { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+
+  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1rem 0; }
+
+  .checklist { display: flex; flex-direction: column; gap: 6px; }
+  .check-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 13px; color: var(--color-text-primary);
+    line-height: 1.5; cursor: pointer; user-select: none;
+  }
+  .check-item input[type=checkbox] { margin-top: 2px; flex-shrink: 0; accent-color: var(--color-text-info); }
+  .check-item.done span { text-decoration: line-through; color: var(--color-text-secondary); }
+
+  .tool-strip { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .tool-badge {
+    font-size: 11px; padding: 3px 9px; border-radius: 10px;
+    border: 0.5px solid var(--color-border-secondary);
+    color: var(--color-text-secondary); background: transparent;
+  }
+
+  .method-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+  .method-card {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: 10px; cursor: pointer; transition: border-color .2s;
+  }
+  .method-card:hover { border-color: var(--color-border-info); }
+  .method-card.sel { border-color: var(--color-border-info); background: var(--color-background-info); }
+  .method-card.sel .mc-title { color: var(--color-text-info); }
+  .mc-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+  .mc-sub { font-size: 11px; color: var(--color-text-secondary); line-height: 1.4; }
+  .method-detail {
+    font-size: 13px; color: var(--color-text-secondary); margin-top: 10px;
+    line-height: 1.6; padding: 10px 12px;
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+  }
+
+  @media (max-width: 520px) {
+    .steps-grid { grid-template-columns: 1fr; }
+    .method-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Academic Research Framework</h1>
+  <p class="subtitle">Six-phase methodology guide · Track your progress through each stage</p>
+
+  <div class="overall-progress">
+    <div class="op-label">Overall framework progress</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="overall-bar" style="width:0%"></div></div>
+    <div class="progress-label">
+      <span id="overall-done">0 of 28 steps complete</span>
+      <span id="overall-pct">0%</span>
+    </div>
+  </div>
+
+  <div class="phase-nav" id="phase-nav"></div>
+  <div id="phase-body"></div>
+
+</div>
+<script>
+const PHASES = [
+  {
+    id: 0, label: "1 · Conception", color: "#7F77DD", bgColor: "rgba(127,119,221,0.12)",
+    title: "Conception & problem definition",
+    desc: "Identify your research gap and craft a precise, answerable question.",
+    steps: [
+      { label: "Literature scan", sub: "Map existing knowledge; identify gap or contradiction." },
+      { label: "Research question", sub: "Draft a specific, feasible, ethical question (FINER criteria)." },
+      { label: "Scope definition", sub: "Set boundaries: population, timeframe, geography, variables." },
+      { label: "Feasibility check", sub: "Assess resources, access, ethics, and timeline." },
+    ],
+    checklist: [
+      "Define central research question",
+      "Identify 3–5 keywords for database search",
+      "Outline scope and exclusion criteria",
+      "Complete initial literature map",
+      "Confirm research is feasible and ethical",
+    ],
+    tools: ["PubMed", "Google Scholar", "Semantic Scholar", "Zotero", "Connected Papers"],
+  },
+  {
+    id: 1, label: "2 · Design", color: "#1D9E75", bgColor: "rgba(29,158,117,0.12)",
+    title: "Methodology design",
+    desc: "Select your paradigm, approach, and data strategy.",
+    steps: [
+      { label: "Paradigm choice", sub: "Positivist, interpretivist, or pragmatist worldview?" },
+      { label: "Research design", sub: "Experimental, observational, case study, ethnographic…" },
+      { label: "Data strategy", sub: "Primary vs. secondary; quantitative, qualitative, or mixed." },
+      { label: "Sampling plan", sub: "Define population, sample frame, and sample size rationale." },
+    ],
+    checklist: [
+      "Select ontological / epistemological stance",
+      "Choose research design and justify it",
+      "Specify data collection methods",
+      "Define sampling strategy and size",
+      "Write methods section draft",
+    ],
+    tools: ["CONSORT", "STROBE", "COREQ", "PRISMA", "CASP checklist"],
+    methodChooser: true,
+  },
+  {
+    id: 2, label: "3 · Ethics & IRB", color: "#D85A30", bgColor: "rgba(216,90,48,0.12)",
+    title: "Ethics & institutional review",
+    desc: "Ensure research integrity and protect participants before any data collection.",
+    steps: [
+      { label: "Risk assessment", sub: "Identify harms to participants, communities, or environment." },
+      { label: "Consent design", sub: "Draft informed consent documents; plan for vulnerable groups." },
+      { label: "IRB / ethics board", sub: "Submit application; obtain approval before proceeding." },
+      { label: "Data governance", sub: "Plan anonymisation, storage, retention, and disposal." },
+    ],
+    checklist: [
+      "Complete ethics risk matrix",
+      "Draft consent / assent forms",
+      "Submit IRB / ethics board application",
+      "Receive written approval",
+      "Set up secure data storage",
+    ],
+    tools: ["IRB Online", "REDCap", "OpenClinica", "Qualtrics (anonymised)"],
+  },
+  {
+    id: 3, label: "4 · Data collection", color: "#BA7517", bgColor: "rgba(186,117,23,0.12)",
+    title: "Data collection",
+    desc: "Execute your data collection plan with rigour and consistency.",
+    steps: [
+      { label: "Instrument design", sub: "Build and pilot-test surveys, interview guides, or protocols." },
+      { label: "Pilot study", sub: "Test instruments with a small sample; refine based on feedback." },
+      { label: "Data gathering", sub: "Collect data systematically; document deviations from protocol." },
+      { label: "Quality control", sub: "Check completeness, consistency, and inter-rater reliability." },
+    ],
+    checklist: [
+      "Finalise and pilot-test instruments",
+      "Train data collectors if applicable",
+      "Execute data collection protocol",
+      "Log all deviations or anomalies",
+      "Verify data completeness and quality",
+    ],
+    tools: ["REDCap", "Qualtrics", "NVivo", "MAXQDA", "ODK Collect"],
+  },
+  {
+    id: 4, label: "5 · Analysis", color: "#185FA5", bgColor: "rgba(24,95,165,0.12)",
+    title: "Data analysis",
+    desc: "Transform raw data into structured findings through systematic analysis.",
+    steps: [
+      { label: "Data cleaning", sub: "Handle missing values, outliers, and coding errors." },
+      { label: "Descriptive stats", sub: "Summarise distributions, central tendency, variability." },
+      { label: "Inferential / thematic", sub: "Run statistical tests or develop qualitative themes." },
+      { label: "Validity checks", sub: "Assess internal/external validity, reliability, credibility." },
+    ],
+    checklist: [
+      "Create a clean, documented dataset",
+      "Run descriptive statistics or initial coding",
+      "Apply primary analysis method",
+      "Check assumptions and validity",
+      "Record all analysis decisions in an audit trail",
+    ],
+    tools: ["R / RStudio", "SPSS", "STATA", "Python (pandas, scipy)", "NVivo", "Atlas.ti"],
+  },
+  {
+    id: 5, label: "6 · Dissemination", color: "#993556", bgColor: "rgba(153,53,86,0.12)",
+    title: "Dissemination & impact",
+    desc: "Share findings responsibly and ensure your research has real-world effect.",
+    steps: [
+      { label: "Manuscript drafting", sub: "Structure per IMRaD: Intro, Methods, Results, Discussion." },
+      { label: "Peer review & revision", sub: "Submit to a suitable journal; respond to reviewers rigorously." },
+      { label: "Open access & data", sub: "Deposit preprint, data, and code in public repositories." },
+      { label: "Impact & engagement", sub: "Brief stakeholders; engage policy, media, and public." },
+    ],
+    checklist: [
+      "Draft full manuscript in IMRaD format",
+      "Conduct internal peer review / co-author check",
+      "Select target journal and submission",
+      "Deposit data / preprint in open repository",
+      "Plan knowledge translation and stakeholder engagement",
+    ],
+    tools: ["Overleaf", "ORCID", "Zenodo", "OSF", "bioRxiv / SSRN", "PubMed Central"],
+  },
+];
+
+const METHODS = [
+  { label: "RCT", sub: "Randomised controlled trial. Gold standard for causal inference.", detail: "Best for: Causal effect of an intervention. Requires: Ability to randomise, control group. Outputs: Effect size, p-value, confidence interval. Checklist: Use CONSORT reporting." },
+  { label: "Quasi-experiment", sub: "Controlled comparison without random assignment.", detail: "Best for: When randomisation is unethical or impractical. Techniques: Difference-in-differences, regression discontinuity, propensity score matching." },
+  { label: "Cohort study", sub: "Follow a defined group over time.", detail: "Best for: Incidence of outcomes and temporal relationships. Prospective or retrospective. Report with STROBE checklist. Watch for loss-to-follow-up bias." },
+  { label: "Case-control", sub: "Compare cases with matched controls.", detail: "Best for: Rare outcomes. Efficient and inexpensive. Main bias: Recall and selection. Calculate odds ratios with 95% CI." },
+  { label: "Cross-sectional", sub: "Snapshot of a population at one point.", detail: "Best for: Prevalence estimates and hypothesis generation. Cannot establish temporality. Beware non-response bias." },
+  { label: "Systematic review", sub: "Synthesise all evidence on a question.", detail: "Best for: Summarising a body of evidence. Follow PRISMA. Use GRADE to assess certainty. Register protocol on PROSPERO." },
+  { label: "Grounded theory", sub: "Develop theory from qualitative data.", detail: "Best for: When no existing theory fits. Iterative: sample → code → compare → sample more. Reach theoretical saturation before stopping." },
+  { label: "Phenomenology", sub: "Lived experience of a phenomenon.", detail: "Best for: Understanding meaning and subjective experience. Small samples, in-depth interviews. Use bracketing to manage researcher bias." },
+  { label: "Mixed methods", sub: "Quantitative + qualitative integrated.", detail: "Best for: Complex questions needing breadth and depth. Designs: Convergent, explanatory sequential, exploratory sequential. Ensure rigour in both strands." },
+];
+
+let activePhase = 0;
+let methodSel = null;
+const checks = {};
+PHASES.forEach(p => p.checklist.forEach((_, i) => { checks[`${p.id}-${i}`] = false; }));
+
+function doneChecks() { return Object.values(checks).filter(Boolean).length; }
+function totalChecks() { return Object.keys(checks).length; }
+
+function updateOverall() {
+  const done = doneChecks(), total = totalChecks();
+  const pct = Math.round(done / total * 100);
+  document.getElementById('overall-bar').style.width = pct + '%';
+  document.getElementById('overall-done').textContent = done + ' of ' + total + ' steps complete';
+  document.getElementById('overall-pct').textContent = pct + '%';
+}
+
+function renderNav() {
+  document.getElementById('phase-nav').innerHTML = PHASES.map(p =>
+    `<button class="ph-pill ${p.id===activePhase?'active':''}" onclick="setPhase(${p.id})">${p.label}</button>`
+  ).join('');
+}
+
+function renderBody() {
+  const p = PHASES[activePhase];
+  const done = p.checklist.filter((_, i) => checks[`${p.id}-${i}`]).length;
+  const pct = Math.round(done / p.checklist.length * 100);
+
+  let methodHtml = '';
+  if (p.methodChooser) {
+    methodHtml = `
+      <hr class="divider"/>
+      <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px;">Research design selector</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:8px;">Click a design to see guidance.</div>
+      <div class="method-grid">
+        ${METHODS.map((m,i) => `
+          <div class="method-card ${methodSel===i?'sel':''}" onclick="selectMethod(${i})">
+            <div class="mc-title">${m.label}</div>
+            <div class="mc-sub">${m.sub}</div>
+          </div>`).join('')}
+      </div>
+      ${methodSel !== null ? `<div class="method-detail">${METHODS[methodSel].detail}</div>` : ''}
+    `;
+  }
+
+  document.getElementById('phase-body').innerHTML = `
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-num" style="background:${p.bgColor};color:${p.color}">${p.id+1}</div>
+        <div>
+          <div class="phase-title">${p.title}</div>
+          <div class="phase-desc">${p.desc}</div>
+        </div>
+      </div>
+
+      <div class="steps-grid">
+        ${p.steps.map(s=>`<div class="step-item"><div class="step-label">${s.label}</div><div class="step-sub">${s.sub}</div></div>`).join('')}
+      </div>
+
+      <hr class="divider"/>
+
+      <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px;">Phase checklist</div>
+      <div class="checklist">
+        ${p.checklist.map((c,i)=>`
+          <label class="check-item ${checks[`${p.id}-${i}`]?'done':''}">
+            <input type="checkbox" ${checks[`${p.id}-${i}`]?'checked':''} onchange="toggle(${p.id},${i},this.checked)"/>
+            <span>${c}</span>
+          </label>`).join('')}
+      </div>
+
+      <div class="progress-bar-wrap" style="margin-top:12px;"><div class="progress-bar" style="width:${pct}%"></div></div>
+      <div class="progress-label" style="margin-top:4px;">
+        <span>${done} of ${p.checklist.length} complete</span><span>${pct}%</span>
+      </div>
+
+      <hr class="divider"/>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:6px;">Recommended tools & standards</div>
+      <div class="tool-strip">${p.tools.map(t=>`<span class="tool-badge">${t}</span>`).join('')}</div>
+
+      ${methodHtml}
+    </div>
+  `;
+}
+
+function setPhase(id) { activePhase = id; methodSel = null; renderNav(); renderBody(); }
+function selectMethod(i) { methodSel = methodSel===i ? null : i; renderBody(); }
+function toggle(pid, idx, val) {
+  checks[`${pid}-${idx}`] = val;
+  updateOverall();
+  renderBody();
+}
+
+renderNav(); renderBody(); updateOverall();
+</script>
+</body>
+</html>
