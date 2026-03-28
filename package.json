@@ -1,0 +1,19 @@
+{
+  "name": "axialnet",
+  "version": "1.0.0",
+  "description": "Axialnet startup webpage",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx live-server ."
+  },
+  "keywords": [
+    "axialnet",
+    "webpage"
+  ],
+  "author": "chicken-D-rice",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
